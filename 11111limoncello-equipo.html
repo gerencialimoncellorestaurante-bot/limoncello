@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Limoncello — Canal del equipo</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--lemon:#C8B89A;--lemon-dark:#9A8468;--lemon-light:#F7F3ED;--green:#2D5A27;--green-mid:#4A7C42;--green-light:#EAF3E8;--cream:#FAFAF5;--ink:#1A1A16;--ink-mid:#4A4A42;--ink-light:#8A8A7A;--surface:#FFFFFF;--border:rgba(26,26,22,0.1);--success:#2D7A3A;--success-bg:#EAF4EB;--danger:#A0290E;--danger-bg:#FAEAE6;--radius:14px;--radius-sm:8px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;font-size:15px}
+h1,h2,h3{font-family:'Fraunces',serif;font-weight:600}
+.nav{background:#fff;padding:0 24px;display:flex;align-items:center;height:60px;gap:16px;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border)}
+.nav-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.nav-user{font-size:13px;color:var(--ink-mid)}
+.nav-btn{background:var(--cream);border:1px solid var(--border);color:var(--ink);border-radius:var(--radius-sm);padding:6px 14px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.main{max-width:700px;margin:0 auto;padding:32px 20px 60px}
+.screen{display:none}.screen.active{display:block}
+.login-wrap{min-height:calc(100vh - 60px);display:flex;align-items:center;justify-content:center;padding:40px 20px}
+.login-card{background:var(--surface);border-radius:20px;border:1px solid var(--border);padding:40px 36px;width:100%;max-width:360px;text-align:center}
+.login-card h1{font-size:26px;color:var(--ink);margin-bottom:6px}
+.login-card p{font-size:14px;color:var(--ink-light);margin-bottom:28px}
+.field{margin-bottom:16px;text-align:left}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--ink-mid);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+.field select,.field input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--cream);outline:none}
+.btn-main{width:100%;padding:12px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer}
+.btn-main:hover{background:var(--green-mid)}
+.page-header{margin-bottom:28px}
+.page-header h2{font-size:24px;color:var(--ink);margin-bottom:4px}
+.page-header p{font-size:14px;color:var(--ink-light)}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.stat-card .label{font-size:12px;color:var(--ink-light);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.stat-card .value{font-family:'Fraunces',serif;font-size:28px;color:var(--ink)}
+.sec-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-light);margin-bottom:12px}
+.mesero-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-bottom:32px}
+.mesero-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 14px;cursor:pointer;transition:border-color .15s,transform .15s}
+.mesero-card:hover{border-color:var(--green-mid);transform:translateY(-2px)}
+.avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;margin-bottom:10px}
+.mesero-name{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:2px}
+.mesero-sede{font-size:12px;color:var(--ink-light);margin-bottom:8px}
+.nivel-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;margin-bottom:8px;font-weight:500}
+.n-aprendiz{background:#E6F1FB;color:#0C447C}.n-junior{background:#FAEEDA;color:#633806}.n-pro{background:#EAF3E8;color:#1A5C20}.n-embajador{background:#EEEDFE;color:#3C3489}
+.mini-stars{display:flex;gap:2px}.mini-star{font-size:13px;color:#9A8468}.mini-star.e{color:#DDD}
+.add-tile{border:2px dashed var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:140px;color:var(--ink-light);font-size:13px}
+.add-tile:hover{border-color:var(--green-mid);color:var(--green-mid)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 14px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;background:var(--surface);color:var(--ink)}
+.btn:hover{background:var(--cream)}
+.btn-green{background:var(--green);color:#fff;border-color:var(--green)}.btn-green:hover{background:var(--green-mid)}
+.btn-lemon{background:var(--lemon);color:var(--ink);border-color:var(--lemon)}
+.btn-danger{color:var(--danger);border-color:rgba(160,41,14,0.2)}.btn-danger:hover{background:var(--danger-bg)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:400px;margin-bottom:24px}
+.color-opts{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.color-opt{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent}
+.color-opt.sel{border-color:var(--ink)!important}
+.detail-hero{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.detail-avatar{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:500;flex-shrink:0}
+.detail-name{font-size:20px;font-weight:600;font-family:'Fraunces',serif;color:var(--ink)}
+.detail-meta{font-size:13px;color:var(--ink-light);margin:2px 0 8px}
+.big-stars{display:flex;gap:3px}.big-star{font-size:18px;color:#9A8468}.big-star.e{color:#DDD}
+.mod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px}
+.mod-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.mod-name{font-size:13px;color:var(--ink-mid);margin-bottom:8px;font-weight:500}
+.mod-stars{display:flex;gap:4px}.mod-star{font-size:22px;color:#9A8468}.mod-star.e{color:#E0E0D8}
+.content-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+.content-item{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px}
+.content-item:last-child{border-bottom:none}
+.check-ring{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;cursor:pointer}
+.ring-yes{background:var(--success-bg)}.ring-no{background:var(--cream);border:1px solid var(--border)}
+.ci-body{flex:1;min-width:0}
+.ci-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.tipo-badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+.t-texto{background:#E6F1FB;color:#0C447C}.t-video{background:#FAEEDA;color:#633806}.t-audio{background:#EAF3E8;color:#1A5C20}.t-reto{background:#FBEAF0;color:#72243E}
+.ci-title{font-size:14px;font-weight:500;color:var(--ink)}
+.ci-meta{font-size:12px;color:var(--ink-light);margin-bottom:8px}
+.mensaje-box{background:var(--lemon-light);border-left:3px solid var(--lemon);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:14px 16px;font-size:14px;line-height:1.8;color:var(--ink);white-space:pre-wrap;margin-bottom:10px}
+.hint-text{font-size:12px;color:var(--ink-light);font-style:italic;margin-top:6px}
+.eval-box{margin-top:10px;padding:14px;background:var(--cream);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.eval-q{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:10px}
+.quiz-opt{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:6px;cursor:pointer;background:var(--surface);font-size:13px;color:var(--ink)}
+.quiz-opt:hover{background:var(--green-light);border-color:var(--green-mid)}
+.quiz-opt.correct{background:var(--success-bg);border-color:var(--success);color:var(--success);pointer-events:none}
+.quiz-opt.wrong{background:var(--danger-bg);border-color:var(--danger);color:var(--danger);pointer-events:none}
+.quiz-opt.locked{pointer-events:none;opacity:.6}
+.open-area{width:100%;min-height:80px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:var(--surface);resize:vertical;outline:none}
+.ai-fb{margin-top:10px;padding:12px 14px;background:var(--surface);border-radius:var(--radius-sm);border-left:3px solid var(--lemon-dark);font-size:13px;color:var(--ink);line-height:1.6}
+.eval-done{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:13px;margin-top:8px}
+.eval-done.pass{background:var(--success-bg);color:var(--success)}.eval-done.fail{background:var(--danger-bg);color:var(--danger)}
+.mod-section{margin-bottom:32px}
+.mod-section-header{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--green);border-radius:var(--radius) var(--radius) 0 0;color:#fff}
+.mod-section-header .mod-title{font-family:'Fraunces',serif;font-size:15px}
+.mod-section-header .mod-stats{margin-left:auto;font-size:12px;opacity:.75}
+.dots{display:inline-flex;gap:4px;vertical-align:middle}
+.dots span{width:5px;height:5px;border-radius:50%;background:var(--ink-light);animation:bop .9s infinite}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+@keyframes bop{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}}
+.tabs{display:flex;gap:4px;margin-bottom:24px;border-bottom:1px solid var(--border)}
+.tab{padding:8px 16px;font-size:14px;cursor:pointer;color:var(--ink-light);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.active{color:var(--green);border-bottom-color:var(--green);font-weight:500}
+.tab-panel{display:none}.tab-panel.active{display:block}
+@media(max-width:500px){.stat-row{grid-template-columns:repeat(2,1fr)}.mod-grid{grid-template-columns:1fr}.mesero-grid{grid-template-columns:repeat(2,1fr)}.main{padding:20px 14px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div style="font-family:'Fraunces',serif;font-size:22px;color:#9A8468">Limoncello</div>
+  <div class="nav-right">
+    <span class="nav-user" id="nav-user-label"></span>
+    <span id="nav-sede-badge" style="display:none;font-size:11px;padding:2px 8px;border-radius:10px;background:#EAF3E8;color:#1A5C20;font-weight:500"></span>
+    <button class="nav-btn" id="nav-logout-btn" style="display:none" onclick="doLogout()">Salir</button>
+  </div>
+</nav>
+
+<div id="s-login" class="screen active">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div style="font-family:'Fraunces',serif;font-size:40px;color:#9A8468;margin-bottom:16px">Limoncello</div>
+      <h1>Canal del equipo</h1>
+      <p>Villavicencio · Buque & Viva Bistro</p>
+      <div class="field">
+        <label>¿Quién eres?</label>
+        <select id="login-select" onchange="onSelectChange(this.value)">
+          <option value="">— selecciona —</option>
+          <option value="admin">Dueño — todas las sedes</option>
+          <option value="admin_buque">Admin — Sede Buque</option>
+          <option value="admin_viva">Admin — Sede Viva Bistro</option>
+        </select>
+      </div>
+      <div class="field" id="pass-wrap" style="display:none">
+        <label>Contraseña</label>
+        <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div id="login-error" style="color:var(--danger);font-size:13px;margin-bottom:10px;display:none">Contraseña incorrecta. Intenta de nuevo.</div>
+      <button class="btn-main" onclick="doLogin()">Entrar</button>
+      <p style="margin-top:12px;font-size:12px;color:var(--ink-light)">Los meseros aparecen aquí cuando el admin los registra</p>
+    </div>
+  </div>
+</div>
+
+<div id="s-admin" class="screen">
+  <div class="main">
+    <div class="page-header"><h2 id="admin-page-title">Panel del equipo</h2><p id="admin-page-sub">Bienvenido</p></div>
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('t-equipo',this)">Equipo</div>
+      <div class="tab" onclick="switchTab('t-contenido',this)">Contenido</div>
+      <div class="tab" onclick="switchTab('t-config',this)">Configuración</div>
+    </div>
+    <div id="t-equipo" class="tab-panel active">
+      <div class="stat-row" id="admin-stats"></div>
+      <div class="sec-title">Meseros registrados</div>
+      <div class="mesero-grid" id="admin-grid"></div>
+    </div>
+    <div id="t-contenido" class="tab-panel"><div id="admin-content"></div></div>
+    <div id="t-config" class="tab-panel"><div id="config-panel"></div></div>
+  </div>
+</div>
+
+<div id="s-add" class="screen">
+  <div class="main">
+    <div class="page-header"><h2>Nuevo mesero</h2></div>
+    <div class="form-card">
+      <div class="field"><label>Nombre completo</label><input type="text" id="f-nombre" placeholder="Ej: Laura Gómez"></div>
+      <div class="field"><label>Sede</label><select id="f-sede"><option value="Buque">Buque</option><option value="Viva Bistro">Viva Bistro</option></select></div>
+      <div class="field"><label>Color de avatar</label><div class="color-opts" id="color-opts"></div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-green" onclick="saveMesero()">✓ Guardar</button>
+      <button class="btn" onclick="showScreen('s-admin')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div id="s-detail" class="screen">
+  <div class="main">
+    <div style="margin-bottom:20px"><button class="btn" onclick="showScreen('s-admin')">← Volver</button></div>
+    <div id="detail-hero"></div>
+    <div class="sec-title">Progreso por módulo</div>
+    <div class="mod-grid" id="detail-mods"></div>
+    <div class="sec-title">Historial de contenido</div>
+    <div id="detail-content"></div>
+    <div class="btn-row"><span id="delete-btn-wrap"><button class="btn btn-danger" onclick="deleteMesero()">Eliminar mesero</button></span></div>
+  </div>
+</div>
+
+<div id="s-mesero" class="screen">
+  <div class="main">
+    <div id="mv-hero"></div>
+    <div class="sec-title" style="margin-bottom:12px">Mi progreso por módulo</div>
+    <div class="mod-grid" id="mv-mods"></div>
+    <div class="sec-title" style="margin-bottom:12px">Mi contenido</div>
+    <div id="mv-content"></div>
+  </div>
+</div>
+
+<script>
+const PASSWORDS={admin:'987654321',admin_buque:'Limonbuque',admin_viva:'Limonviva'};
+const COLORS=[{bg:'#E6F1FB',text:'#0C447C'},{bg:'#E1F5EE',text:'#085041'},{bg:'#FAEEDA',text:'#633806'},{bg:'#EEEDFE',text:'#3C3489'},{bg:'#FBEAF0',text:'#72243E'},{bg:'#EAF3DE',text:'#27500A'},{bg:'#FCEBEB',text:'#791F1F'},{bg:'#F1EFE8',text:'#444441'}];
+const MODULES=[{id:'m1',name:'Bienvenida y cultura',icon:'🏠'},{id:'m2',name:'Servicio de excelencia',icon:'⭐'},{id:'m3',name:'Venta inteligente',icon:'📈'},{id:'m4',name:'Equipo y motivación',icon:'💛'}];
+const CONTENT=[
+  {id:'c1',mod:'m1',sem:1,tipo:'texto',titulo:'Bienvenida al canal',tema:'Por qué se creó este grupo',
+   mensaje:'🍋 ¡Hola equipo Limoncello!\n\nHoy empieza algo diferente. Este canal nació porque creo en ustedes — y quiero que también crean en lo que hacen.\n\nAntes de que un plato llegue a la mesa, pasaron por él decenas de personas. El agricultor que cultivó el ingrediente, el proveedor que lo trajo, el chef que lo preparó con dedicación, el equipo de cocina que lo emplató con cuidado.\n\nToda esa cadena de trabajo, de esfuerzo y de amor por lo que hacemos… termina en ustedes.\n\nUstedes son el último eslabón. El más visible. El que el cliente recuerda.\n\nY eso, en lugar de ser una presión, es un privilegio enorme.\n\n✨ Un cliente sentado es una oportunidad completa. No solo de servirle un plato — sino de regalarle una experiencia que recuerde: una entrada que lo sorprenda, un plato fuerte que lo enamore, una bebida que lo acompañe, y un postre que lo haga querer volver.\n\nEso es lo que vamos a aprender juntos aquí: cómo ser el mejor cierre posible de todo ese trabajo que no se ve.\n\nEste espacio es nuestro. Cada lunes, miércoles y viernes habrá algo nuevo para que cada uno sea mejor profesional.\n\nEmpezamos hoy. ¡Bienvenidos al equipo! 💛',
+   quiz:{type:'multi',q:'¿Cuál es el principal objetivo de este canal?',opts:['Enviar horarios','Crecer juntos como equipo','Hacer anuncios','Controlar asistencia'],ok:1}},
+  {id:'c2',mod:'m1',sem:1,tipo:'video',titulo:'Presentación del líder',tema:'Visión del restaurante y el rol de cada mesero',quiz:{type:'open',q:'¿Qué te motivó a ser mesero y qué esperas aprender en Limoncello?'}},
+  {id:'c3',mod:'m1',sem:1,tipo:'reto',titulo:'Reto de presentación',tema:'¿Cuál es tu momento favorito en el trabajo?',quiz:{type:'multi',q:'¿Cuál describe mejor la hospitalidad en Limoncello?',opts:['Servir rápido','Acompañar con calidez','Tomar el pedido','Cobrar la cuenta'],ok:1}},
+  {id:'c4',mod:'m1',sem:2,tipo:'texto',titulo:'Los valores de Limoncello',tema:'Calidez, atención y orgullo por el trabajo',quiz:{type:'multi',q:'¿Cuáles son los valores clave de Limoncello?',opts:['Rapidez y precio','Calidez, atención y orgullo','Tecnología y modernidad','Exclusividad y lujo'],ok:1}},
+  {id:'c5',mod:'m2',sem:2,tipo:'video',titulo:'Historia del restaurante',tema:'De dónde venimos y hacia dónde vamos',quiz:{type:'open',q:'¿Cómo crees que la historia del restaurante influye en el servicio que das hoy?'}},
+  {id:'c6',mod:'m2',sem:3,tipo:'video',titulo:'El lenguaje del servicio',tema:'Cómo saludar y crear conexión en los primeros 30 segundos',quiz:{type:'multi',q:'¿Qué debes lograr en los primeros 30 segundos con un cliente?',opts:['Tomar el pedido','Crear conexión y bienvenida','Ofrecer el menú','Presentar las promociones'],ok:1}},
+  {id:'c7',mod:'m2',sem:3,tipo:'texto',titulo:'Frases que sí usamos',tema:'Guía práctica de frases que usamos y evitamos',quiz:{type:'multi',q:'¿Cuál es la mejor frase para recibir a un cliente?',opts:['"¿Qué van a querer?"','"Bienvenidos, ¿en qué los puedo acompañar?"','"Un momento por favor"','"¿Ya están listos?"'],ok:1}},
+  {id:'c8',mod:'m2',sem:4,tipo:'audio',titulo:'Leer la mesa',tema:'Tipos de clientes y cómo identificar lo que necesitan',quiz:{type:'open',q:'Describe cómo identificas qué tipo de cliente tiene tu mesa.'}},
+  {id:'c9',mod:'m3',sem:5,tipo:'video',titulo:'Conoce el menú',tema:'Platos estrella, ingredientes y la historia detrás de cada uno',quiz:{type:'open',q:'Describe tu plato favorito del menú en 3 frases, sin usar la palabra "rico".'}},
+  {id:'c10',mod:'m3',sem:5,tipo:'texto',titulo:'Storytelling gastronómico',tema:'Cómo describir un plato para que el cliente lo desee',quiz:{type:'multi',q:'¿Qué técnica usas para que el cliente desee un plato?',opts:['Repetir el precio','Contar la historia del ingrediente','Apresurarlo a decidir','Leer el menú en voz alta'],ok:1}},
+  {id:'c11',mod:'m3',sem:6,tipo:'audio',titulo:'Vender sin vender',tema:'Diferencia entre empujar y recomendar — upselling natural',quiz:{type:'multi',q:'¿Cuál es la diferencia entre empujar y recomendar?',opts:['Son lo mismo','Recomendar parte de lo que el cliente quiere','Empujar es más efectivo','Ninguna diferencia'],ok:1}},
+  {id:'c12',mod:'m4',sem:7,tipo:'reto',titulo:'Reto del equipo',tema:'¿Qué harías diferente para mejorar la experiencia de un cliente?',quiz:{type:'open',q:'¿Qué harías diferente esta semana para mejorar la experiencia de un cliente?'}}
+];
+const UNLOCK=[{id:'c1',date:'2025-05-23'},{id:'c2',date:'2025-05-26'},{id:'c3',date:'2025-05-28'},{id:'c4',date:'2025-05-30'},{id:'c5',date:'2025-06-02'},{id:'c6',date:'2025-06-04'},{id:'c7',date:'2025-06-06'},{id:'c8',date:'2025-06-09'},{id:'c9',date:'2025-06-11'},{id:'c10',date:'2025-06-13'},{id:'c11',date:'2025-06-16'},{id:'c12',date:'2025-06-18'}];
+const MESEROS_INICIALES=[
+  {id:'m_buque_1',name:'Luis Felipe Tapiero Campos',sede:'Buque',initials:'LT',color:{bg:'#E6F1FB',text:'#0C447C'}},
+  {id:'m_buque_2',name:'Brayan Alexis Barrera Romero',sede:'Buque',initials:'BB',color:{bg:'#E1F5EE',text:'#085041'}},
+  {id:'m_buque_3',name:'Angie Estefania Daza Guzman',sede:'Buque',initials:'AD',color:{bg:'#FBEAF0',text:'#72243E'}},
+  {id:'m_buque_4',name:'César Donado',sede:'Buque',initials:'CD',color:{bg:'#FAEEDA',text:'#633806'}},
+  {id:'m_viva_1',name:'Linzay Nazareth de Almeida Bonilla',sede:'Viva Bistro',initials:'LB',color:{bg:'#FAEEDA',text:'#633806'}},
+  {id:'m_viva_2',name:'Yeferson Contreras',sede:'Viva Bistro',initials:'YC',color:{bg:'#EEEDFE',text:'#3C3489'}},
+  {id:'m_viva_3',name:'Laura Camila Triana Acosta',sede:'Viva Bistro',initials:'LT',color:{bg:'#EAF3DE',text:'#27500A'}},
+  {id:'m_viva_4',name:'Maria Paula Llanos Ayala',sede:'Viva Bistro',initials:'ML',color:{bg:'#FAECE7',text:'#712B13'}},
+  {id:'m_viva_5',name:'Hasleidy Novoa',sede:'Viva Bistro',initials:'HN',color:{bg:'#F1EFE8',text:'#444441'}},
+  {id:'m_viva_6',name:'Johana Rodriguez',sede:'Viva Bistro',initials:'JR',color:{bg:'#FCEBEB',text:'#791F1F'}},
+  {id:'m_owner_1',name:'Liliana Cespedes',sede:'Buque',initials:'LC',color:{bg:'#C8B89A',text:'#4A3520'}},
+  {id:'m_prueba',name:'Prueba (vista previa)',sede:'Buque',initials:'PR',color:{bg:'#2D5A27',text:'#FFFFFF'}}
+];
+
+function load(){try{return JSON.parse(localStorage.getItem('lc_v3')||'{}')}catch(e){return {}}}
+function save(d){localStorage.setItem('lc_v3',JSON.stringify(d))}
+
+function initMeseros(){
+  const d=load();
+  if(!d.meseros||d.meseros.length===0){d.meseros=MESEROS_INICIALES.slice();save(d);}
+}
+
+let currentUser=null,detailId=null,selColor=0;
+
+function getNivel(s){if(s>=10)return{label:'Embajador',cls:'n-embajador'};if(s>=6)return{label:'Mesero Pro',cls:'n-pro'};if(s>=3)return{label:'Junior',cls:'n-junior'};return{label:'Aprendiz',cls:'n-aprendiz'}}
+function totalStars(mid){let t=0;MODULES.forEach(m=>{t+=modStars(mid,m.id)});return Math.min(12,t)}
+function modStars(mid,modId){
+  const d=load(),v=d.views||{},e=d.evals||{};
+  const mc=CONTENT.filter(c=>c.mod===modId);if(!mc.length)return 0;
+  let seen=0,pass=0;mc.forEach(c=>{if(v[mid]&&v[mid][c.id])seen++;if(e[mid]&&e[mid][c.id]&&e[mid][c.id].passed)pass++});
+  return Math.min(3,Math.round(((seen+pass)/(mc.length*2))*3));
+}
+function starsHtml(n,max,big){const cls=big?'big-star':'mini-star';return Array.from({length:max},(_,i)=>`<span class="${cls}${i<n?' ':' e'}">★</span>`).join('')}
+
+function onSelectChange(val){
+  const admins=['admin','admin_buque','admin_viva'];
+  document.getElementById('pass-wrap').style.display=admins.indexOf(val)>=0?'block':'none';
+  document.getElementById('login-pass').value='';
+  document.getElementById('login-error').style.display='none';
+}
+
+function doLogin(){
+  const v=document.getElementById('login-select').value;
+  const pass=document.getElementById('login-pass').value;
+  const errEl=document.getElementById('login-error');
+  if(!v)return;
+  if(v==='admin'||v==='admin_buque'||v==='admin_viva'){
+    if(pass!==PASSWORDS[v]){errEl.style.display='block';return;}
+    errEl.style.display='none';
+    const sedeMap={admin:null,admin_buque:'Buque',admin_viva:'Viva Bistro'};
+    const labelMap={admin:'Dueño',admin_buque:'Admin Buque',admin_viva:'Admin Viva Bistro'};
+    currentUser={role:'admin',sede:sedeMap[v],canDelete:v==='admin',label:labelMap[v]};
+    document.getElementById('nav-user-label').textContent=labelMap[v];
+    const badge=document.getElementById('nav-sede-badge');
+    if(sedeMap[v]){badge.textContent=sedeMap[v];badge.style.display='';}else{badge.style.display='none';}
+    document.getElementById('nav-logout-btn').style.display='';
+    initMeseros();renderAdmin();showScreen('s-admin');
+  } else {
+    initMeseros();
+    const d=load();const m=(d.meseros||[]).find(x=>x.id===v);
+    if(m){currentUser={role:'mesero',id:m.id};document.getElementById('nav-user-label').textContent=m.name;document.getElementById('nav-logout-btn').style.display='';renderMesero(m.id);showScreen('s-mesero');}
+  }
+}
+
+function doLogout(){
+  currentUser=null;
+  ['nav-user-label','nav-logout-btn','nav-sede-badge'].forEach(id=>{const el=document.getElementById(id);if(el){if(id==='nav-user-label')el.textContent='';else el.style.display='none';}});
+  document.getElementById('login-select').value='';
+  document.getElementById('login-pass').value='';
+  document.getElementById('pass-wrap').style.display='none';
+  document.getElementById('login-error').style.display='none';
+  showScreen('s-login');
+}
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function switchTab(panelId,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');document.getElementById(panelId).classList.add('active');
+  if(panelId==='t-contenido')renderAdminContent();
+  if(panelId==='t-config')renderConfig();
+}
+
+function renderAdmin(){
+  const d=load();
+  const all=d.meseros||[];
+  const meseros=currentUser.sede?all.filter(m=>m.sede===currentUser.sede):all;
+  document.getElementById('admin-page-title').textContent=currentUser.sede?'Sede '+currentUser.sede:'Todas las sedes';
+  document.getElementById('admin-page-sub').textContent=currentUser.sede?'Limoncello — '+currentUser.sede:'Limoncello Villavicencio — todas las sedes';
+  const views=d.views||{};
+  let totalV=0;meseros.forEach(m=>{totalV+=Object.keys(views[m.id]||{}).length});
+  const avg=meseros.length?Math.round(totalV/(meseros.length*CONTENT.length)*100):0;
+  document.getElementById('admin-stats').innerHTML=`<div class="stat-card"><div class="label">Meseros</div><div class="value">${meseros.length}</div></div><div class="stat-card"><div class="label">Contenidos</div><div class="value">${CONTENT.length}</div></div><div class="stat-card"><div class="label">Engagement</div><div class="value">${avg}%</div></div>`;
+  let g='';
+  meseros.forEach(m=>{
+    const s=totalStars(m.id),nv=getNivel(s);
+    const pct=Math.round(Object.keys(views[m.id]||{}).length/CONTENT.length*100);
+    g+=`<div class="mesero-card" onclick="openDetail('${m.id}')"><div class="avatar" style="background:${m.color.bg};color:${m.color.text}">${m.initials}</div><div class="mesero-name">${m.name}</div><div class="mesero-sede">${m.sede}</div><span class="nivel-badge ${nv.cls}">${nv.label}</span><div class="mini-stars" style="margin:6px 0">${starsHtml(s,12,false)}</div><div style="font-size:11px;color:var(--ink-light)">${pct}% visto</div></div>`;
+  });
+  g+=`<div class="add-tile" onclick="openAdd()"><div style="font-size:28px">+</div><div>Agregar mesero</div></div>`;
+  document.getElementById('admin-grid').innerHTML=g;
+  refreshLoginSelect(meseros);
+}
+
+function refreshLoginSelect(meseros){
+  const sel=document.getElementById('login-select');
+  while(sel.options.length>4)sel.remove(4);
+  meseros.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name;sel.appendChild(o)});
+}
+
+function renderAdminContent(){
+  const d=load();const all=d.meseros||[];
+  const meseros=currentUser.sede?all.filter(m=>m.sede===currentUser.sede):all;
+  const views=d.views||{};let html='';
+  MODULES.forEach(mod=>{
+    const mc=CONTENT.filter(c=>c.mod===mod.id);
+    const totalSeen=meseros.reduce((acc,m)=>acc+mc.filter(c=>views[m.id]&&views[m.id][c.id]).length,0);
+    const maxSeen=meseros.length*mc.length||1;
+    html+=`<div class="mod-section"><div class="mod-section-header"><span>${mod.icon}</span><span class="mod-title">${mod.name}</span><span class="mod-stats">${meseros.length?Math.round(totalSeen/maxSeen*100):0}% completado</span></div><div class="content-card" style="border-radius:0 0 var(--radius) var(--radius);border-top:none">`;
+    mc.forEach(c=>{
+      const seenBy=meseros.filter(m=>views[m.id]&&views[m.id][c.id]);
+      const unseenBy=meseros.filter(m=>!views[m.id]||!views[m.id][c.id]);
+      const chips=[...seenBy.map(m=>`<span class="vchip seen" style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:12px;background:var(--success-bg);color:var(--success)"><span style="width:16px;height:16px;border-radius:50%;background:${m.color.bg};color:${m.color.text};font-size:9px;font-weight:500;display:inline-flex;align-items:center;justify-content:center">${m.initials}</span>${m.name.split(' ')[0]}</span>`),...unseenBy.map(m=>`<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:12px;background:var(--cream);color:var(--ink-light);border:1px solid var(--border)"><span style="width:16px;height:16px;border-radius:50%;background:${m.color.bg};color:${m.color.text};font-size:9px;font-weight:500;display:inline-flex;align-items:center;justify-content:center">${m.initials}</span>${m.name.split(' ')[0]}</span>`)].join('');
+      html+=`<div class="content-item"><div style="flex:1"><div class="ci-top"><span class="tipo-badge t-${c.tipo}">${c.tipo}</span><span class="ci-title">${c.titulo}</span><span style="font-size:11px;color:var(--ink-light);margin-left:auto">Sem ${c.sem}</span></div><div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px">${meseros.length?chips:'<span style="font-size:12px;color:var(--ink-light)">Sin meseros</span>'}</div></div></div>`;
+    });
+    html+='</div></div>';
+  });
+  document.getElementById('admin-content').innerHTML=html;
+}
+
+function renderConfig(){
+  const roleKey=currentUser.sede?(currentUser.sede==='Buque'?'admin_buque':'admin_viva'):'admin';
+  document.getElementById('config-panel').innerHTML=`<div class="form-card" style="max-width:380px"><div style="font-size:16px;font-weight:500;margin-bottom:4px;font-family:'Fraunces',serif">Cambiar contrasena</div><div style="font-size:13px;color:var(--ink-light);margin-bottom:20px">Solo afecta tu propio acceso</div><div class="field"><label>Contrasena actual</label><input type="password" id="cp-current" placeholder="..."></div><div class="field"><label>Nueva contrasena</label><input type="password" id="cp-new" placeholder="Minimo 6 caracteres"></div><div class="field"><label>Confirmar nueva contrasena</label><input type="password" id="cp-confirm" placeholder="Repite la nueva"></div><div id="cp-msg" style="font-size:13px;margin-bottom:10px;display:none"></div><button class="btn btn-green" onclick="changePassword('${roleKey}')">Guardar</button></div>`;
+}
+
+function changePassword(role){
+  const cur=document.getElementById('cp-current').value,nw=document.getElementById('cp-new').value,conf=document.getElementById('cp-confirm').value,msg=document.getElementById('cp-msg');
+  if(cur!==PASSWORDS[role]){msg.style.display='';msg.style.color='var(--danger)';msg.textContent='Contrasena actual incorrecta.';return}
+  if(nw.length<6){msg.style.display='';msg.style.color='var(--danger)';msg.textContent='Minimo 6 caracteres.';return}
+  if(nw!==conf){msg.style.display='';msg.style.color='var(--danger)';msg.textContent='Las contrasenas no coinciden.';return}
+  PASSWORDS[role]=nw;msg.style.display='';msg.style.color='var(--success)';msg.textContent='Contrasena actualizada.';
+}
+
+function openAdd(){
+  selColor=0;document.getElementById('f-nombre').value='';
+  document.getElementById('color-opts').innerHTML=COLORS.map((c,i)=>`<div class="color-opt${i===0?' sel':''}" style="background:${c.bg};border-color:${i===0?c.text:'transparent'}" onclick="pickColor(${i},this)"></div>`).join('');
+  showScreen('s-add');
+}
+function pickColor(i,el){selColor=i;document.querySelectorAll('.color-opt').forEach((e,idx)=>{e.classList.toggle('sel',idx===i);e.style.borderColor=idx===i?COLORS[i].text:'transparent'})}
+function saveMesero(){
+  const name=document.getElementById('f-nombre').value.trim(),sede=document.getElementById('f-sede').value;
+  if(!name)return alert('Escribe el nombre');
+  const initials=name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const d=load();if(!d.meseros)d.meseros=[];
+  d.meseros.push({id:'m_'+Date.now(),name,sede,initials,color:COLORS[selColor]});
+  save(d);renderAdmin();showScreen('s-admin');
+}
+
+function openDetail(mid){
+  detailId=mid;
+  const dbw=document.getElementById('delete-btn-wrap');if(dbw)dbw.style.display=currentUser.canDelete?'':'none';
+  const d=load();const m=(d.meseros||[]).find(x=>x.id===mid);if(!m)return;
+  const s=totalStars(m.id),nv=getNivel(s);
+  document.getElementById('detail-hero').innerHTML=`<div class="detail-hero"><div class="detail-avatar" style="background:${m.color.bg};color:${m.color.text}">${m.initials}</div><div><div class="detail-name">${m.name}</div><div class="detail-meta">${m.sede}</div><span class="nivel-badge ${nv.cls}">${nv.label}</span><div class="big-stars" style="margin-top:8px">${starsHtml(s,12,true)}</div></div></div>`;
+  document.getElementById('detail-mods').innerHTML=MODULES.map(mod=>{const ms=modStars(mid,mod.id);return`<div class="mod-card"><div class="mod-name">${mod.icon} ${mod.name}</div><div class="mod-stars">${starsHtml(ms,3,true)}</div></div>`}).join('');
+  const views=d.views||{},evals=d.evals||{};
+  document.getElementById('detail-content').innerHTML='<div class="content-card">'+CONTENT.map(c=>{
+    const seen=!!(views[mid]&&views[mid][c.id]);const ev=evals[mid]&&evals[mid][c.id];const mod=MODULES.find(x=>x.id===c.mod);
+    return`<div class="content-item"><div class="check-ring ${seen?'ring-yes':'ring-no'}"><span style="font-size:14px;color:${seen?'var(--success)':'var(--ink-light)'}">${seen?'✓':'○'}</span></div><div class="ci-body"><div class="ci-top"><span class="tipo-badge t-${c.tipo}">${c.tipo}</span><span class="ci-title">${c.titulo}</span></div><div class="ci-meta">${mod?mod.name:''} · Sem ${c.sem}</div>${ev?`<div class="eval-done ${ev.passed?'pass':'fail'}">${ev.passed?'✓ Aprobado':'○ En progreso'}</div>`:''}</div></div>`;
+  }).join('')+'</div>';
+  showScreen('s-detail');
+}
+
+function deleteMesero(){
+  if(!detailId||!confirm('Eliminar este mesero?'))return;
+  const d=load();d.meseros=(d.meseros||[]).filter(m=>m.id!==detailId);save(d);renderAdmin();showScreen('s-admin');
+}
+
+function renderMesero(mid){
+  const d=load();const m=(d.meseros||[]).find(x=>x.id===mid);if(!m)return;
+  const s=totalStars(m.id),nv=getNivel(s);
+  document.getElementById('mv-hero').innerHTML=`<div class="detail-hero" style="margin-bottom:24px"><div class="detail-avatar" style="background:${m.color.bg};color:${m.color.text}">${m.initials}</div><div><div class="detail-name">${m.name}</div><div class="detail-meta">${m.sede} · ${nv.label}</div><div class="big-stars" style="margin-top:6px">${starsHtml(s,12,true)}</div></div></div>`;
+  document.getElementById('mv-mods').innerHTML=MODULES.map(mod=>{const ms=modStars(mid,mod.id);return`<div class="mod-card"><div class="mod-name">${mod.icon} ${mod.name}</div><div class="mod-stars">${starsHtml(ms,3,true)}</div></div>`}).join('');
+  buildMeseroContent(mid);
+}
+
+function buildMeseroContent(mid){
+  const d=load();const views=d.views||{};const evals=d.evals||{};
+  const todayStr=new Date().toISOString().slice(0,10);
+  function unlockDate(cid){const e=UNLOCK.find(x=>x.id===cid);return e?e.date:null}
+  function unlocked(cid){const u=unlockDate(cid);return !u||todayStr>=u}
+  function isToday(cid){return unlockDate(cid)===todayStr}
+  function fmtDate(cid){const u=unlockDate(cid);return u?new Date(u+'T12:00:00').toLocaleDateString('es-CO',{day:'numeric',month:'short'}):''}
+
+  function renderItem(c,highlight){
+    const seen=!!(views[mid]&&views[mid][c.id]);const ev=evals[mid]&&evals[mid][c.id];const eid='ev_'+mid+'_'+c.id;
+    let evalHtml='';
+    if(seen&&!ev){
+      if(c.quiz.type==='multi'){evalHtml=`<div class="eval-box"><div class="eval-q">${c.quiz.q}</div>`+c.quiz.opts.map((o,i)=>`<div class="quiz-opt" id="qo_${eid}_${i}" onclick="ansMulti('${mid}','${c.id}',${i},${c.quiz.ok},'${eid}')">${o}</div>`).join('')+'</div>';}
+      else{evalHtml=`<div class="eval-box"><div class="eval-q">${c.quiz.q}</div><textarea class="open-area" id="oa_${eid}" placeholder="Escribe tu respuesta aqui..."></textarea><div style="margin-top:8px"><button class="btn btn-lemon" onclick="ansOpen('${mid}','${c.id}','${eid}')">Evaluar con IA</button></div><div id="fb_${eid}"></div></div>`;}
+    }else if(ev){evalHtml=`<div class="eval-done ${ev.passed?'pass':'fail'}">${ev.passed?'Evaluacion aprobada':'En progreso'}${ev.note?'<br><span style="font-size:12px;opacity:.8">'+ev.note+'</span>':''}</div>`;}
+    const msgHtml=c.mensaje&&!seen?`<div class="mensaje-box">${c.mensaje.replace(/\n/g,'<br>')}</div><div class="hint-text">Lee el mensaje completo y toca el ojo (👁) para marcar como visto</div>`:'';
+    const border=highlight?'border-left:3px solid #C8B89A':'';
+    return`<div class="content-item" style="${border}"><div class="check-ring ${seen?'ring-yes':'ring-no'}" onclick="${seen?'':'markSeen(\''+mid+'\',\''+c.id+'\')'}" title="${seen?'Visto':'Marcar como visto'}"><span style="font-size:15px;color:${seen?'var(--success)':'var(--ink-light)'}">${seen?'✓':'👁'}</span></div><div class="ci-body"><div class="ci-top"><span class="tipo-badge t-${c.tipo}">${c.tipo}</span><span class="ci-title">${c.titulo}</span><span style="font-size:11px;color:var(--ink-light);margin-left:auto">${fmtDate(c.id)}</span></div><div class="ci-meta">${c.tema}</div>${msgHtml}<div id="eval_${mid}_${c.id}">${evalHtml}</div></div></div>`;
+  }
+
+  let html='';
+  const todayLessons=CONTENT.filter(c=>isToday(c.id));
+  const pastLessons=CONTENT.filter(c=>unlocked(c.id)&&!isToday(c.id));
+  if(todayLessons.length){html+=`<div style="margin-bottom:24px"><div class="sec-title" style="color:#633806;margin-bottom:10px">🍋 Leccion de hoy</div><div class="content-card">${todayLessons.map(c=>renderItem(c,true)).join('')}</div></div>`;}
+  if(pastLessons.length){MODULES.forEach(mod=>{const mc=pastLessons.filter(c=>c.mod===mod.id);if(!mc.length)return;html+=`<div style="margin-bottom:24px"><div class="sec-title" style="margin-bottom:10px">${mod.icon} ${mod.name}</div><div class="content-card">${mc.map(c=>renderItem(c,false)).join('')}</div></div>`;});}
+  if(!todayLessons.length&&!pastLessons.length){html=`<div class="content-card" style="padding:32px;text-align:center"><div style="font-size:28px;margin-bottom:12px">🍋</div><div style="font-size:15px;font-weight:500;color:var(--ink);margin-bottom:6px">Ya casi!</div><div style="font-size:13px;color:var(--ink-light)">La primera leccion llega el viernes 23 de mayo.</div></div>`;}
+  document.getElementById('mv-content').innerHTML=html;
+}
+
+function markSeen(mid,cid){const d=load();if(!d.views)d.views={};if(!d.views[mid])d.views[mid]={};d.views[mid][cid]=Date.now();save(d);renderMesero(mid)}
+
+function ansMulti(mid,cid,chosen,correct,eid){
+  const isOk=chosen===correct;const d=load();if(!d.evals)d.evals={};if(!d.evals[mid])d.evals[mid]={};
+  d.evals[mid][cid]={passed:isOk,note:isOk?'Correcto!':'Respuesta incorrecta, repasa el contenido.'};save(d);
+  for(let i=0;i<4;i++){const el=document.getElementById('qo_'+eid+'_'+i);if(!el)continue;if(i===correct)el.classList.add('correct');else if(i===chosen&&!isOk)el.classList.add('wrong');else el.classList.add('locked')}
+  setTimeout(()=>renderMesero(mid),1400);
+}
+
+async function ansOpen(mid,cid,eid){
+  const ta=document.getElementById('oa_'+eid);const fb=document.getElementById('fb_'+eid);
+  if(!ta||!fb||!ta.value.trim())return;
+  const resp=ta.value.trim();ta.disabled=true;
+  fb.innerHTML='<div style="padding:10px 0;font-size:13px;color:var(--ink-light)"><span class="dots"><span></span><span></span><span></span></span> Evaluando...</div>';
+  const c=CONTENT.find(x=>x.id===cid);
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Eres evaluador del restaurante Limoncello en Villavicencio, Colombia. La pregunta fue: "${c.quiz.q}". El mesero respondio: "${resp}". En maximo 3 frases evalua si demuestra comprension del servicio al cliente, da retroalimentacion motivadora y concluye con "Aprobado" o "Sigue practicando".`}]})});
+    const data=await r.json();const text=data.content?.map(x=>x.text||'').join('')||'Sin respuesta';
+    const passed=text.toLowerCase().includes('aprobado');
+    const d=load();if(!d.evals)d.evals={};if(!d.evals[mid])d.evals[mid]={};d.evals[mid][cid]={passed,note:text.slice(0,150)};save(d);
+    fb.innerHTML=`<div class="ai-fb">${text}</div>`;setTimeout(()=>renderMesero(mid),2000);
+  }catch(e){fb.innerHTML='<div style="color:var(--danger);font-size:13px;margin-top:8px">Error al conectar. Intenta de nuevo.</div>';ta.disabled=false;}
+}
+</script>
+</body>
+</html>
